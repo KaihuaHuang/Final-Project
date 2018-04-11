@@ -56,3 +56,4 @@ float Node:: distance_calculation(const Node1, const Node2)
 }
 //distance comparision
 
+void def test() {}
