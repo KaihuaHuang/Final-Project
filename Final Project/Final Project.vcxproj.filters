@@ -44,5 +44,8 @@
     <ClInclude Include="Preprocess.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="DecisionTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
