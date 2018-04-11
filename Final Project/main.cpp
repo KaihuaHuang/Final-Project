@@ -1,13 +1,13 @@
 #include <iostream>
+#include "Node.h"
 
 using namespace std;
 
 int main() {
-	cout << "Hello World";
-	cout << " Angela is able to edit.";
-    cout << "Rui Ma";
-	cout<<"Zenghui Li"<<endl;
-	cout << "111" << endl;
-	cout << "ANGELA" << endl;
-    cout << "test" <<endl;
+	double test[5] = { 0,1,2,3,4 };
+	int a = 0;
+	int b = 5;
+	Node node((double*)test, a, b);
+	cout << node;
+
 }

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PRERPOCESS_H
+#define PRERPOCESS_H
 #include "Node.h"
 #include <vector>
 class PRERPOCESS {
@@ -11,3 +12,5 @@ public:
 	static void normalizeAllFactors(std::vector<Node>& dataSet, int& size, int& n);
 
 };
+
+#endif

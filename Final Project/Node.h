@@ -1,4 +1,6 @@
-#pragma once
+#ifndef NODE_H
+#define NODE_H
+#include <iostream>
 class Node {
 private:
 	double* factors;
@@ -19,4 +21,7 @@ public:
 	int getLabel();
 	double* getFactors();
 	int getFactorNum();
+	friend std::ostream& operator<<(std::ostream& os, const Node& node);
 };
+
+#endif
