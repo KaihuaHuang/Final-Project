@@ -5,10 +5,6 @@ double distance(Node & anotherNode)
 	return 0.0;
 }
 
-double Node::getFactor(int n)
-{
-	return 0.0;
-}
 
 Node::Node()
 {
