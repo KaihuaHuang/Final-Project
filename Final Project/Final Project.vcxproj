@@ -115,16 +115,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="KNN.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Node.cpp" />
-    <ClCompile Include="Preprocess.cpp" />
+    <ClCompile Include="ReadFile.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ExcelReader.h" />
     <ClInclude Include="KNN.h" />
     <ClInclude Include="Node.h" />
-    <ClInclude Include="Preprocess.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
