@@ -122,6 +122,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExcelReader.h" />
+    <ClInclude Include="DecisionTree.h" />
     <ClInclude Include="KNN.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="Preprocess.h" />
