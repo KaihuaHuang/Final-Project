@@ -10,6 +10,30 @@ double Node::getFactor(int n)
 	return 0.0;
 }
 
+Node::Node()
+{
+}
+
+Node::Node(double * inputFactors, int & inputLabel, int & inputFactorNum)
+{
+}
+
+Node::Node(Node & inputNode)
+{
+}
+
+void Node::setFactors(double * inputFactors)
+{
+}
+
+void Node::setLabel(int & inputLabel)
+{
+}
+
+void Node::setFactorNum(int & inputNum)
+{
+}
+
 double Node::getFactor(int & n)
 {
 	return 0.0;

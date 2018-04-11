@@ -1,29 +1,27 @@
 #pragma once
-
-
-#include <iostream>
-
-#include<fstream>
-
-#include<sstream>
-
-#include<vector>
-
-class Node {
-
+#include <vector>
+#include "Node.h"
+class KNN {
+private:
+	int kNeighbor;
+	int trainningSetNum;
+	std::vector<Node> trainningSet;
+	double* weights;
 public:
-
-	float *feature;
-
-	int label;
-
-	int num;
+	KNN(int k = 5,double* inputWeights=NULL);
+	void setWeights(double* inputWeights);
+	//Set the trainningSet and its size
+	//Deep Copy from dataSet
+	void fit(std::vector<Node>& dataSet, const int& num);
+	//Return the predict labels
+	int* predict(std::vector<Node>& dataSet, const int& num);
+	int predictNode(Node& node);
 };
 
-// the node structure should be same as all from above
 
-//standarlize the data
 
+
+/*
 vector<Node> dataset;//should be initialize ahead
 
 
@@ -117,3 +115,4 @@ float Node::distance_calculation(const Node1, const Node2)
 
 
 void def test() {}
+*/
