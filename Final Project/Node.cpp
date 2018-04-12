@@ -55,6 +55,7 @@ void Node::setFactors(double * inputFactors)
 
 void Node::setLabel(int & inputLabel)
 {
+	label = inputLabel;
 }
 
 void Node::setLabel(int inputLabel)
@@ -64,6 +65,7 @@ void Node::setLabel(int inputLabel)
 
 void Node::setFactorNum(int & inputNum)
 {
+	factorNum = inputNum;
 }
 
 void Node::setFactorNum(int inputNum)
@@ -73,7 +75,10 @@ void Node::setFactorNum(int inputNum)
 
 double Node::getFactor(int & n) 
 {
-	return 0.0;
+	if (n < factorNum && n >= 0)
+		return factors[n];
+	else
+		return -99999;
 }
 
 int Node::getLabel() const
