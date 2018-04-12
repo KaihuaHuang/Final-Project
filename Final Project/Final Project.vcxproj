@@ -119,6 +119,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Preprocess.cpp" />
+    <ClCompile Include="DecisionTree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExcelReader.h" />
