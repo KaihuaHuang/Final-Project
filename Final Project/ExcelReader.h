@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <vector>
 #include "Node.h"
 class ExcelReader {
 private:
@@ -13,7 +14,7 @@ private:
 	void parser(Node& node,std::stringstream& ss);
 public:
 	ExcelReader(std::string& inputFileName,bool inputHeader = true);
-
+	std::vector<Node> readFile();
 
 
 };

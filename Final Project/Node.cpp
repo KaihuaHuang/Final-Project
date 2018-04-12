@@ -17,6 +17,7 @@ double distance(Node & anotherNode)
 
 Node::Node()
 {
+	factors = NULL;
 }
 
 Node::Node(double * inputFactors, int & inputLabel, int & inputFactorNum)
@@ -29,39 +30,63 @@ Node::Node(double * inputFactors, int & inputLabel, int & inputFactorNum)
 	}
 }
 
-Node::Node(Node & inputNode)
+Node::Node(const Node& inputNode)
 {
-
+	factorNum = inputNode.factorNum;
+	label = inputNode.label;
+	double* inputFactors = inputNode.getFactors();
+	factors = new double[factorNum];
+	
+	for (int i = 0; i < factorNum; i++) {
+		factors[i] = inputFactors[i];
+	}
 }
 
 void Node::setFactors(double * inputFactors)
 {
+	if (factors != NULL) {
+		delete[] factors;
+	}
+	factors = new double[factorNum];
+	for (int i = 0; i < factorNum; i++) {
+		factors[i] = inputFactors[i];
+	}
 }
 
 void Node::setLabel(int & inputLabel)
 {
 }
 
+void Node::setLabel(int inputLabel)
+{
+	label = inputLabel;
+}
+
 void Node::setFactorNum(int & inputNum)
 {
 }
 
-double Node::getFactor(int & n)
+void Node::setFactorNum(int inputNum)
+{
+	factorNum = inputNum;
+}
+
+double Node::getFactor(int & n) 
 {
 	return 0.0;
 }
 
-int Node::getLabel()
+int Node::getLabel() const
 {
-	return 0;
+	return label;
 }
 
-double * Node::getFactors()
+double * Node::getFactors() const
 {
-	return nullptr;
+	return factors;
 }
 
-int Node::getFactorNum()
+int Node::getFactorNum() const
 {
-	return 0;
+	return factorNum;
 }

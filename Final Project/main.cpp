@@ -5,13 +5,11 @@
 using namespace std;
 
 int main() {
-	double test[5] = { 0,1,2,3,4 };
-	int a = 0;
-	int b = 5;
-	Node node((double*)test, a, b);
-	cout << node;
-
 	string fileName("dataSet.csv");
 	ExcelReader reader(fileName);
+	vector<Node> dataSet = reader.readFile();
+	for (auto it = dataSet.begin(); it != dataSet.end(); it++) {
+		cout << *it << endl;
+	}
 
 }
