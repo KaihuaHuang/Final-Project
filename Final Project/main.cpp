@@ -11,5 +11,6 @@ int main() {
 	for (auto it = dataSet.begin(); it != dataSet.end(); it++) {
 		cout << *it << endl;
 	}
+	cout << distance(dataSet[0], dataSet[1]) << endl;
 
 }

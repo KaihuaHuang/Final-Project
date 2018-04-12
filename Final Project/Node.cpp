@@ -1,5 +1,5 @@
 #include "Node.h"
-
+#define INDUSTRY_DISTANCE 3
 std::ostream& operator<<(std::ostream& os, const Node& node) {
 	os << "Factors: ";
 	for (int i = 0; i < node.factorNum; i++) {
@@ -9,9 +9,18 @@ std::ostream& operator<<(std::ostream& os, const Node& node) {
 	return os;
 }
 
-double distance(Node & anotherNode)
+double distance(Node& node,Node & anotherNode)
 {
-	return 0.0;
+	double distance = 0;
+	for (int i = 0; i < (node.factorNum-1); i++) {
+		distance += (node.factors[i] - anotherNode.factors[i])* (node.factors[i] - anotherNode.factors[i]);
+	}
+	if (node.factors[node.factorNum - 1] == anotherNode.factors[node.factorNum - 1]) {
+		return distance;
+	}
+	else {
+		return distance + INDUSTRY_DISTANCE * INDUSTRY_DISTANCE;
+	}
 }
 
 
