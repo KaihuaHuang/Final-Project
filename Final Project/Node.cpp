@@ -9,11 +9,16 @@ std::ostream& operator<<(std::ostream& os, const Node& node) {
 	return os;
 }
 
-double distance(Node& node,Node & anotherNode)
+double distance(Node& node,Node & anotherNode, double* weights)
 {
 	double distance = 0;
 	for (int i = 0; i < (node.factorNum-1); i++) {
-		distance += (node.factors[i] - anotherNode.factors[i])* (node.factors[i] - anotherNode.factors[i]);
+		if(weights == NULL){
+			distance += (node.factors[i] - anotherNode.factors[i])* (node.factors[i] - anotherNode.factors[i]);
+		}
+		else {
+			distance += (node.factors[i] - anotherNode.factors[i])* (node.factors[i] - anotherNode.factors[i])*weights[i];
+		}
 	}
 	if (node.factors[node.factorNum - 1] == anotherNode.factors[node.factorNum - 1]) {
 		return distance;
