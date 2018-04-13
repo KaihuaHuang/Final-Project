@@ -116,6 +116,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ExcelReader.cpp" />
+    <ClCompile Include="KNN.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Preprocess.cpp" />
