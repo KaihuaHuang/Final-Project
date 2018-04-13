@@ -8,8 +8,8 @@ private:
 	std::vector<Node> trainningSet;
 	double* weights;
 public:
-	KNN(int k = 5,double* inputWeights=NULL);
-	void setWeights(double* inputWeights);
+	KNN(int k = 5,double* inputWeights=NULL,int weightNum = 0);
+	void setWeights(double* inputWeights,int weightNum);
 	//Set the trainningSet and its size
 	//Deep Copy from dataSet
 	void fit(std::vector<Node>& dataSet, const int& num);

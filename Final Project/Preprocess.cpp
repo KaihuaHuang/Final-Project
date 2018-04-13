@@ -12,7 +12,8 @@ set PRERPOCESS::normalizeAllFactors(set & dataSet, int & size, int & n)
 
 std::tuple<set, set> PRERPOCESS::seperateSet(set & dataSet, double * splitWeights)
 {
-	return std::tuple<set, set>();
+	return std::tie(dataSet, dataSet);
+
 }
 
 set PRERPOCESS::rebalanceSet(set & dataSet, double * balanceWeights)

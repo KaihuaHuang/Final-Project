@@ -2,7 +2,7 @@
 #define PRERPOCESS_H
 #include "Node.h"
 #include <vector>
-#include <utility>
+#include <tuple>
 using set = std::vector<Node>;
 class PRERPOCESS {
 public:
@@ -17,6 +17,8 @@ public:
 	static std::tuple<set, set> seperateSet(set& dataSet, double* splitWeights);
 
 	static set rebalanceSet(set& dataSet, double* balanceWeights);
+
+
 };
 
 #endif
