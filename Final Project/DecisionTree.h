@@ -15,13 +15,13 @@ private:
 	
 public:
 	Tree(double p = 0.95);
-
 	void setDecisionNode(int& inputDecisionNode);
 	void setBranch(string& inputBranch);
 	void addChild(Tree* inputChild);
 	int getDecisionNode() const;
 	string getBranch() const;
 	vector<Tree*> getChild() const;
+	double getStopCriteria() const;
 
 	Tree* buildTree(Tree* tree, vector<Node> dataSet);
 	void display(int Depth);

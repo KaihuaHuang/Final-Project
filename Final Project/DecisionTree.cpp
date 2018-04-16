@@ -78,6 +78,25 @@ vector<double> uniqueValues(vector<double> val) {
 	return val;
 }
 
+double frequentValues(vector<double> val) {
+	vector<double> uniqueVal = uniqueValues(val);
+	int count[uniqueVal.size()] = { 0 };
+	for (int i = 0; i < val.size(); i++) {
+		for (int j = 0; j < uniqueVal.size(); j++) {
+			count[j] = count(val.begin(), val.end(), uniqueVal[j]);
+		}
+	}
+
+	int maxCount = 0, maxIndex;
+	for (int i = 0; i < uniqueVal.size(); i++) {
+		if (count[i] > maxCount) {
+			maxCount = count[i];
+			maxIndex = i;
+		}
+	}
+	return uniqueVal[maxIndex];
+}
+
 double computeEntropy(vector<double> values) {
 
 	// get a list of unique values
@@ -149,8 +168,48 @@ string Tree::getBranch() const { return Branch; }
 
 vector<Tree*> Tree::getChild() const { return Child; }
 
-Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet) {
+double Tree::getStopCriteria() const { return StopCriteria; }
 
+Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet) {
+	
+	vector<double> cluster = getTargets(dataSet);
+	vector<double> uniqueTargets = uniqueValues(cluster);
+	int leaf;
+
+	// DecisionNode here is Leaf Node
+	if (uniqueTargets.size() == 1) {
+		leaf = int(uniqueTargets[0]);
+		tree->setDecisionNode(leaf);
+		return tree;
+	}
+
+	//Stop cluster's size <= 5
+	if(cluster.size() <= 5) {
+		leaf = int(frequentValues(cluster));
+		tree->setDecisionNode(leaf);
+		return tree;
+	}
+
+	// Stop if reach 95% similarity
+	int count[uniqueTargets.size()] = { 0 };
+	for (int i = 0; i < cluster.size(); ++i) {
+		for (int j = 0; j < uniqueTargets.size(); ++j) {
+			count[j] = count(cluster.begin(), cluster.end(), uniqueTargets[j]);
+		}
+	}
+	for (int i = 0; i < uniqueTargets.size(); ++i) {
+		if ((count[i] / cluster.size()) >= 0.95) {
+			leaf = int(uniqueTargets[i]);
+			tree->setDecisionNode(leaf);
+			return tree;
+		}
+	}
+
+	// Find attribute with max info gain
+
+	// Determine cutoff point
+
+	// Build the tree
 }
 
 void Tree::display(int Depth) {
