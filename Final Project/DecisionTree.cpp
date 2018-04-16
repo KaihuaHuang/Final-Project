@@ -135,4 +135,24 @@ double gainRatio(vector<Node> dataSet, int attributeIndex, double cutOff = 0) {
 }
 
 // Decision Tree
+Tree::Tree(double p = 0.95) : StopCriteria(p) { DecisionNode = 0; Branch = ""; }
 
+void Tree::setDecisionNode(int& inputDecisionNode) { DecisionNode = inputDecisionNode; }
+
+void Tree::setBranch(string& inputBranch) { Branch = inputBranch; }
+
+void Tree::addChild(Tree* inputChild) { Child.push_back(inputChild); }
+
+int Tree::getDecisionNode() const { return DecisionNode; }
+
+string Tree::getBranch() const { return Branch; }
+
+vector<Tree*> Tree::getChild() const { return Child; }
+
+Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet) {
+
+}
+
+void Tree::display(int Depth) {
+
+}
