@@ -97,17 +97,17 @@ vector<double> uniqueValues(vector<double> val) {
 
 double frequentValues(vector<double> val) {
 	vector<double> uniqueVal = uniqueValues(val);
-	int count[uniqueVal.size()] = { 0 };
+	int* Count = new int[uniqueVal.size()]{ 0 };
 	for (int i = 0; i < val.size(); i++) {
 		for (int j = 0; j < uniqueVal.size(); j++) {
-			count[j] = count(val.begin(), val.end(), uniqueVal[j]);
+			Count[j] = count(val.begin(), val.end(), uniqueVal[j]);
 		}
 	}
 
 	int maxCount = 0, maxIndex;
 	for (int i = 0; i < uniqueVal.size(); i++) {
-		if (count[i] > maxCount) {
-			maxCount = count[i];
+		if (Count[i] > maxCount) {
+			maxCount = Count[i];
 			maxIndex = i;
 		}
 	}
@@ -119,9 +119,8 @@ double computeEntropy(vector<double> values) {
 	// get a list of unique values
 	vector<double> valueRange = uniqueValues(values);
 
-	//count the 
 	double entropy = 0.;
-	int count[valueRange.size()] = { 0 };
+	int* count = new int[valueRange.size()]{ 0 };
 	if (valueRange.size() == 0) { return 0.; }
 	else {
 		for (int i = 0; i < values.size(); ++i) {
@@ -210,14 +209,14 @@ Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet) {
 	}
 
 	// Stop if reach 95% similarity
-	int count[uniqueTargets.size()] = { 0 };
+	int* Count = new int[uniqueTargets.size()]{ 0 };
 	for (int i = 0; i < cluster.size(); ++i) {
 		for (int j = 0; j < uniqueTargets.size(); ++j) {
-			count[j] = count(cluster.begin(), cluster.end(), uniqueTargets[j]);
+			Count[j] = count(cluster.begin(), cluster.end(), uniqueTargets[j]);
 		}
 	}
 	for (int i = 0; i < uniqueTargets.size(); ++i) {
-		if ((count[i] / cluster.size()) >= 0.95) {
+		if ((Count[i] / cluster.size()) >= 0.95) {
 			leaf = int(uniqueTargets[i]);
 			tree->setDecisionNode(leaf);
 			return tree;
