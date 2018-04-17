@@ -1,8 +1,11 @@
+#include <string>
 #include <map>
 #include <cmath>
 #include <algorithm>
 #include "DecisionTree.h"
 using namespace std;
+
+
 
 // DataSet Processor
 vector<double> getTargets(vector<Node> dataSet) {
@@ -48,27 +51,41 @@ vector<double> sortTargetValues(vector<Node> dataSet, int attributeIndex) {
 	return targets;
 }
 
-map<string, vector<double>> getAttributeBisectParts(vector<Node> dataSet, int attributeIndex, double cutoff) {
-	map <string, vector<double>> bisectParts;
-	vector < double > SortedValues = sortAttributeValues(dataSet, attributeIndex);
-	vector < double > SortedTargets = sortTargetValues(dataSet, attributeIndex);
-	vector < double > Row_1, Row_2, Row_3, Row_4;
-	for (int i = 0; i < SortedValues.size(); ++i) {
-		if ((SortedValues[i] - cutoff) < -1.e-8) {
-			Row_1.push_back(SortedTargets[i]);
-			Row_3.push_back(SortedValues[i]);
-		}
-		else {
-			Row_2.push_back(SortedTargets[i]);
-			Row_4.push_back(SortedValues[i]);
+vector<double> getCutOffs(vector<Node> dataSet, int attributeIndex) {
+	vector<double> cutOffs;
+	vector < double > sortedValues = sortAttributeValues(dataSet, attributeIndex);
+	vector < double > sortedTargets = sortTargetValues(dataSet, attributeIndex);
+	for (int i = 0; i < sortedValues.size() - 1; i++) {
+		if ((sortedValues[i] != sortedValues[i + 1]) & (sortedTargets[i] != sortedTargets[i + 1])) {
+			cutOffs.push_back((sortedValues[i] + sortedValues[i + 1]) / 2.);
 		}
 	}
-	bisectParts["Lower_Scores"] = Row_1;
-	bisectParts["Upper_Scores"] = Row_2;
-	bisectParts["Lower_Values"] = Row_3;
-	bisectParts["Upper_Values"] = Row_4;
+	return cutOffs;
+}
+
+map<string, vector<double>> getAttributeBisectParts(vector<Node> dataSet, int attributeIndex, double cutoff) {
+	map <string, vector<double>> bisectParts;
+	vector < double > sortedValues = sortAttributeValues(dataSet, attributeIndex);
+	vector < double > sortedTargets = sortTargetValues(dataSet, attributeIndex);
+	vector < double > row1, row2, row3, row4;
+	for (int i = 0; i < sortedValues.size(); ++i) {
+		if (sortedValues[i] < cutoff) {
+			row1.push_back(sortedTargets[i]);
+			row3.push_back(sortedValues[i]);
+		}
+		else {
+			row2.push_back(sortedTargets[i]);
+			row4.push_back(sortedValues[i]);
+		}
+	}
+	bisectParts["Lower_Scores"] = row1;
+	bisectParts["Upper_Scores"] = row2;
+	bisectParts["Lower_Values"] = row3;
+	bisectParts["Upper_Values"] = row4;
 	return bisectParts;
 }
+
+
 
 // C4.5 Entrogy and Information Gain Calculations
 vector<double> uniqueValues(vector<double> val) {
@@ -147,11 +164,13 @@ double computeInfoGain(vector<Node> dataSet, int attributeIndex, double cutOff =
 	return gainedEntropy;
 }
 
-double gainRatio(vector<Node> dataSet, int attributeIndex, double cutOff = 0) {
+double computeGainRatio(vector<Node> dataSet, int attributeIndex, double cutOff = 0) {
 	double attributeEntropy = computeAttributeEntropy(dataSet, attributeIndex);
 	double attributeInfoGain = computeInfoGain(dataSet, attributeIndex, cutOff);
 	return (attributeInfoGain / attributeEntropy);
 }
+
+
 
 // Decision Tree
 Tree::Tree(double p = 0.95) : StopCriteria(p) { DecisionNode = 0; Branch = ""; }
@@ -205,13 +224,58 @@ Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet) {
 		}
 	}
 
-	// Find attribute with max info gain
+	// Determine attribute and cutoff point for the attribute with max info gain
+	double infoGain = 0, gainRatio = 0;
+	double tempGainRatio, tempInfoGain, maxCutOff;
+	int MaxAttributeIndex = 0;
+	int numAttribute = dataSet[0].getFactorNum();
+	for (int i = 0; i < numAttribute; ++i) {
+		// int attributeIndex = i;
+		vector<double> cutOff = getCutOffs(dataSet, i);
+		for (int j = 0; j < cutOff.size(); ++j) {
+			tempInfoGain = computeInfoGain(dataSet, i, cutOff[j]);
+			if (tempInfoGain > infoGain) {
+				infoGain = tempInfoGain;
+				maxCutOff = cutOff[j];
+			}
+		}
 
-	// Determine cutoff point
+		tempGainRatio = computeGainRatio(dataSet, i, maxCutOff);
+		if (tempGainRatio > gainRatio) {
+			gainRatio = tempGainRatio;
+			MaxAttributeIndex = i;
+		}
+	}
 
 	// Build the tree
+	tree->setDecisionNode(MaxAttributeIndex);
+	vector<string> values = { "lowerValue","upperValue" };
+	string leftBranch = "< " + to_string(maxCutOff);
+	string rightBranch = "< " + to_string(maxCutOff);
+	vector<string> branches = { leftBranch,rightBranch };
+
+	vector<double> dataSetRemain;			//Need to build dataSet for each branches
+	for (int i = 0; i < values.size(); ++i) {
+
+		Tree* newTree = new Tree(tree->getStopCriteria());
+		newTree->setBranch(branches[i]);
+
+		vector<double> cluster = getTargets(dataSetRemain);
+		vector<double> newUniqueTargets = uniqueValues(cluster);
+		if (newUniqueTargets.size() == 1) { 
+			int leaf = int(newUniqueTargets[0]);
+			newTree->setDecisionNode(leaf);
+		}
+		else {
+			buildTree(newTree, dataSetRemain);
+		}
+		tree->addChild(newTree);
+	}
+
+	return tree;
 }
 
 void Tree::display(int Depth) {
+	// when display, display the header instead of attribute index
 
 }
