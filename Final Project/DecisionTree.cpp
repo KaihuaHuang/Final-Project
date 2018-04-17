@@ -227,7 +227,7 @@ Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet) {
 	// Determine attribute and cutoff point for the attribute with max info gain
 	double infoGain = 0, gainRatio = 0;
 	double tempGainRatio, tempInfoGain, maxCutOff;
-	int MaxAttributeIndex = 0;
+	int maxAttributeIndex = 0;
 	int numAttribute = dataSet[0].getFactorNum();
 	for (int i = 0; i < numAttribute; ++i) {
 		// int attributeIndex = i;
@@ -243,25 +243,37 @@ Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet) {
 		tempGainRatio = computeGainRatio(dataSet, i, maxCutOff);
 		if (tempGainRatio > gainRatio) {
 			gainRatio = tempGainRatio;
-			MaxAttributeIndex = i;
+			maxAttributeIndex = i;
 		}
 	}
 
-	// Build the tree
-	tree->setDecisionNode(MaxAttributeIndex);
+	// Construct the node and branches
+	tree->setDecisionNode(maxAttributeIndex);
 	vector<string> values = { "lowerValue","upperValue" };
 	string leftBranch = "< " + to_string(maxCutOff);
 	string rightBranch = "< " + to_string(maxCutOff);
 	vector<string> branches = { leftBranch,rightBranch };
 
-	vector<double> dataSetRemain;			//Need to build dataSet for each branches
-	for (int i = 0; i < values.size(); ++i) {
+	// Construct dataSet for each branches
+	map<string, vector<Node>> parts;
+	vector<Node> row1, row2;
+	for (int i = 0; i < dataSet.size(); ++i) {
+		double attributeValue = dataSet[i].getFactor(maxAttributeIndex);
+		if (attributeValue < maxCutOff) { row1.push_back(dataSet[i]); }
+		else { row2.push_back(dataSet[i]); }
+	}
+	parts["lowerValue"] = row1;
+	parts["upperValue"] = row2;
 
+	// Build the tree
+	for (int i = 0; i < branches.size(); ++i) {
 		Tree* newTree = new Tree(tree->getStopCriteria());
 		newTree->setBranch(branches[i]);
 
+		vector<Node> dataSetRemain = parts[values[i]];
 		vector<double> cluster = getTargets(dataSetRemain);
 		vector<double> newUniqueTargets = uniqueValues(cluster);
+
 		if (newUniqueTargets.size() == 1) { 
 			int leaf = int(newUniqueTargets[0]);
 			newTree->setDecisionNode(leaf);
