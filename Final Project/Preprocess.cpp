@@ -1,21 +1,47 @@
 #include "Preprocess.h"
 #include <algorithm>
 #define LABELNUM 3
-set PRERPOCESS::normalizeFactor(set & dataSet, int & size, int & n)
+void PRERPOCESS::normalizeFactor(set& dataSet, int n)
 {
-	return set();
+	int size = dataSet.size();
+	double min = 99999;
+	double max = -1;
+	double factor;
+	for (int i = 0; i < size; i++) {
+		factor = dataSet[i].getFactor(n);
+		if (factor < min) {
+			min = factor;
+		}
+		if (factor > max) {
+			max = factor;
+		}
+	}
+	for (int i = 0; i < size; i++) {
+		factor = dataSet[i].getFactor(n);
+		dataSet[i].setFactor((factor - min) / (max - min), n);
+	}
 }
 
-set PRERPOCESS::normalizeAllFactors(set & dataSet, int & size, int & n)
+void PRERPOCESS::normalizeAllFactorsExcept(set & dataSet,int n)
 {
-	return set();
+	int factorNum = dataSet[0].getFactorNum();
+	for (int i = 0; i < factorNum; i++) {
+		if (i != n) {
+			normalizeFactor(dataSet, i);
+		}
+	}
 }
 
-std::tuple<set, set> PRERPOCESS::seperateSet(set & dataSet, double * splitWeights)
+std::tuple<set, set> PRERPOCESS::seperateSet(set & dataSet, double splitWeights)
 {
-
-	return std::tie(dataSet, dataSet);
-
+	if (splitWeights < 0 || splitWeights > 1) {
+		std::cerr << "Split Weight is not between 0 and 1" << std::endl;
+	}
+	int size = dataSet.size();
+	auto it = dataSet.begin();
+	set trainningSet = set(it, it + (int)(size*splitWeights));
+	set testSet = set(it + (int)(size*splitWeights), dataSet.end());
+	return std::tie(trainningSet, testSet);
 }
 
 set PRERPOCESS::rebalanceSet(set & dataSet, double * balanceWeights)
@@ -45,9 +71,6 @@ set PRERPOCESS::rebalanceSet(set & dataSet, double * balanceWeights)
 			count3++;
 		}
 	}
-	std::cout << count1 << std::endl;
-	std::cout << count2 << std::endl;
-	std::cout << count3 << std::endl;
 	int x = 0;
 	if (balanceWeights[0] > balanceWeights[1] && balanceWeights[0] > balanceWeights[2])
 	{
@@ -83,48 +106,7 @@ set PRERPOCESS::rebalanceSet(set & dataSet, double * balanceWeights)
 		count2 = balanceWeights[1] / balanceWeights[2] * x;
 		count3 = x;
 	}
-	/*std::cout << x << std::endl;
-	std::vector<int> temp;
-	for (int i = 0; i < count1; ++i)
-	{
-		temp.push_back(i + 1);
-	}
-	std::random_shuffle(temp.begin(), temp.end());
-	for (int i = 0; i < x; ++i)
-	{
-		index1.push_back(temp[i]);
-	}
-	temp.clear();
-
-	for (int i = 0; i < count2; ++i)
-	{
-		temp.push_back(i + 1);
-	}
-	std::random_shuffle(temp.begin(), temp.end());
-	for (int i = 0; i < x; ++i)
-	{
-		index2.push_back(temp[i]);
-	}
-	temp.clear();
-	for (int i = 0; i < count3; ++i)
-	{
-		temp.push_back(i + 1);
-	}
-	std::random_shuffle(temp.begin(), temp.end());
-	for (int i = 0; i < x; ++i)
-	{
-		index3.push_back(temp[i]);
-	}
-	temp.clear();
-	std::vector<Node> newDataSet;
-	for (int i = 0; i < x; i++)
-	{
-		newDataSet.push_back(up[index1[i]]);
-		newDataSet.push_back(no_change[index2[i]]);
-		newDataSet.push_back(down[index3[i]]);
-	}
-
-	return newDataSet;*/
+	
 	std::vector<Node> newDataSet;
 	std::random_shuffle(up.begin(), up.end());
 	std::random_shuffle(no_change.begin(), no_change.end());

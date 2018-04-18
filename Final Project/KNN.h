@@ -14,7 +14,7 @@ public:
 	//Deep Copy from dataSet
 	void fit(std::vector<Node>& dataSet, const int& num);
 	//Return the predict labels
-	int* predict(std::vector<Node>& dataSet, const int& num);
+	std::vector<int> predict(std::vector<Node>& dataSet);
 	int predictNode(Node& node);
 };
 

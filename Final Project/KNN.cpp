@@ -40,10 +40,17 @@ void KNN::fit(std::vector<Node>& dataSet, const int & num)
 	trainningSetNum = num;
 }
 
-int * KNN::predict(std::vector<Node>& dataSet, const int & num)
+std::vector<int> KNN::predict(std::vector<Node>& dataSet)
 {
-	return nullptr;
+	int size = dataSet.size();
+	std::vector<int> predictResult;
+	for (int i = 0; i < size; i++) {
+		predictResult.push_back(predictNode(dataSet[i]));
+	}
+	return predictResult;
 }
+
+
 
 int KNN::predictNode(Node & node)
 {

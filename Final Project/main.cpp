@@ -5,25 +5,35 @@
 #include "KNN.h"
 #include "Preprocess.h"
 #include "DecisionTree.h"
+#define SPLITWEIGHT 0.8
 using namespace std;
 
 int main() {
+	//Read from csv file
 	string fileName("dataSet.csv");
 	ExcelReader reader(fileName);
-	vector<Node> dataSet = reader.readFile();
-	/*for (auto it = dataSet.begin(); it != dataSet.end(); it++) {
-		cout << *it << endl;
-	}*/
+	set dataSet = reader.readFile();
+
+	//Coyp DataSet for KNN and normalize it
+	set dataSetCopy = dataSet;
+	PRERPOCESS::normalizeAllFactorsExcept(dataSetCopy, 11);
+
+
+	//Seperate data into trainingSet and testSet
+	std::tuple<set, set> setPair = PRERPOCESS::seperateSet(dataSetCopy, SPLITWEIGHT);
+	set trainningSet = get<0>(setPair);
+	set testSet = get<1>(setPair);
+
+	//Rebalance trainingSet
 	double balanceWeights[3] = { 1,2,1 };
+	vector<Node> balanceSet = PRERPOCESS::rebalanceSet(trainningSet, balanceWeights);
 
-	vector<Node> balanceSet = PRERPOCESS::rebalanceSet(dataSet, balanceWeights);
 
-	double* weights = NULL;
-	//cout << distance(dataSet[0], dataSet[1], weights) << endl;
+	double weights[12] = {1,1,1,1,1,1,1,1,1,1,1,1};
 
 	KNN cif;
-	cif.fit(dataSet, dataSet.size());
-	cout << "Predict Label: " << cif.predictNode(dataSet[0]) << endl;
+	cif.fit(balanceSet, balanceSet.size());
+	cout << "Predict Label: " << cif.predictNode(testSet[0]) << endl;
 
 	// Decision Tree Implementation
 	Tree tree;

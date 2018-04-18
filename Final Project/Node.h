@@ -18,6 +18,7 @@ public:
 	void setLabel(int inputLabel);
 	void setFactorNum(int& inputNum);
 	void setFactorNum(int inputNum);
+	void setFactor(double value, int n);
 	friend double distance(Node& node, Node & anotherNode,double* weights);
 	double getFactor(int& n);
 	int getLabel() const;

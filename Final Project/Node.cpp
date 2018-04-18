@@ -87,6 +87,11 @@ void Node::setFactorNum(int inputNum)
 	factorNum = inputNum;
 }
 
+void Node::setFactor(double value, int n)
+{
+	factors[n] = value;
+}
+
 double Node::getFactor(int & n) 
 {
 	if (n < factorNum && n >= 0)

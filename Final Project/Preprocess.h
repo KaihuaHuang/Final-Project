@@ -7,14 +7,14 @@ using set = std::vector<Node>;
 class PRERPOCESS {
 public:
 	//Do the normalize for n th factor
-	static set normalizeFactor(set& dataSet, int& size, int& n);
+	static void normalizeFactor(set& dataSet, int n);
 
 	//Normalize all the factors except n th factor
 	//N th factor would be represent for industry
-	static set normalizeAllFactors(set& dataSet, int& size, int& n);
+	static void normalizeAllFactorsExcept(set& dataSet, int n = -1);
 
 	//According splitWeights to split dataset into training set and test set
-	static std::tuple<set, set> seperateSet(set& dataSet, double* splitWeights);
+	static std::tuple<set, set> seperateSet(set& dataSet, double splitWeights);
 
 	static set rebalanceSet(set& dataSet, double* balanceWeights);
 
