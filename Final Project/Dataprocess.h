@@ -4,7 +4,7 @@
 #include <vector>
 #include <tuple>
 using set = std::vector<Node>;
-class PRERPOCESS {
+class DATARPOCESS {
 public:
 	//Do the normalize for n th factor
 	static void normalizeFactor(set& dataSet, int n);

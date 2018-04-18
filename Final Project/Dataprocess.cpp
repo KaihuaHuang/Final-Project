@@ -1,7 +1,7 @@
-#include "Preprocess.h"
+#include "Dataprocess.h"
 #include <algorithm>
 #define LABELNUM 3
-void PRERPOCESS::normalizeFactor(set& dataSet, int n)
+void DATARPOCESS::normalizeFactor(set& dataSet, int n)
 {
 	int size = dataSet.size();
 	double min = 99999;
@@ -22,7 +22,7 @@ void PRERPOCESS::normalizeFactor(set& dataSet, int n)
 	}
 }
 
-void PRERPOCESS::normalizeAllFactorsExcept(set & dataSet,int n)
+void DATARPOCESS::normalizeAllFactorsExcept(set & dataSet,int n)
 {
 	int factorNum = dataSet[0].getFactorNum();
 	for (int i = 0; i < factorNum; i++) {
@@ -32,7 +32,7 @@ void PRERPOCESS::normalizeAllFactorsExcept(set & dataSet,int n)
 	}
 }
 
-std::tuple<set, set> PRERPOCESS::seperateSet(set & dataSet, double splitWeights)
+std::tuple<set, set> DATARPOCESS::seperateSet(set & dataSet, double splitWeights)
 {
 	if (splitWeights < 0 || splitWeights > 1) {
 		std::cerr << "Split Weight is not between 0 and 1" << std::endl;
@@ -44,7 +44,7 @@ std::tuple<set, set> PRERPOCESS::seperateSet(set & dataSet, double splitWeights)
 	return std::tie(trainningSet, testSet);
 }
 
-set PRERPOCESS::rebalanceSet(set & dataSet, double * balanceWeights)
+set DATARPOCESS::rebalanceSet(set & dataSet, double * balanceWeights)
 {
 	std::vector<Node> up;
 	std::vector<Node> no_change;
@@ -123,7 +123,7 @@ set PRERPOCESS::rebalanceSet(set & dataSet, double * balanceWeights)
 	return newDataSet;
 }
 
-std::vector<int> PRERPOCESS::getLabels(set & dataSet)
+std::vector<int> DATARPOCESS::getLabels(set & dataSet)
 {
 	int size = dataSet.size();
 	std::vector<int> labels;

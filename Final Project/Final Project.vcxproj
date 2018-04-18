@@ -120,7 +120,7 @@
     <ClCompile Include="KNN.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Node.cpp" />
-    <ClCompile Include="Preprocess.cpp" />
+    <ClCompile Include="Dataprocess.cpp" />
     <ClCompile Include="DecisionTree.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -129,7 +129,7 @@
     <ClInclude Include="DecisionTree.h" />
     <ClInclude Include="KNN.h" />
     <ClInclude Include="Node.h" />
-    <ClInclude Include="Preprocess.h" />
+    <ClInclude Include="Dataprocess.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

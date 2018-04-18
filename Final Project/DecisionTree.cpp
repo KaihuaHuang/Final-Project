@@ -88,6 +88,7 @@ map<string, vector<double>> getAttributeBisectParts(vector<Node> dataSet, int at
 
 
 // C4.5 Entrogy and Information Gain Calculations
+// Get a list of unique values of val
 vector<double> uniqueValues(vector<double> val) {
 	sort(val.begin(), val.end());
 	val.erase(unique(val.begin(),val.end()), val.end());
@@ -95,6 +96,7 @@ vector<double> uniqueValues(vector<double> val) {
 	return val;
 }
 
+// Return the most frequent values of val
 double frequentValues(vector<double> val) {
 	vector<double> uniqueVal = uniqueValues(val);
 	int* Count = new int[uniqueVal.size()]{ 0 };
@@ -114,6 +116,7 @@ double frequentValues(vector<double> val) {
 	return uniqueVal[maxIndex];
 }
 
+//Calculate the entropy
 double computeEntropy(vector<double> values) {
 
 	// get a list of unique values
@@ -139,6 +142,7 @@ double computeEntropy(vector<double> values) {
 
 	return entropy;
 }
+
 
 double computeAttributeEntropy(vector<Node> dataSet, int attributeIndex) {
 	// get a vector of values associated with given attribute

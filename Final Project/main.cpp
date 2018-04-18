@@ -3,7 +3,7 @@
 #include "Node.h"
 #include "ExcelReader.h"
 #include "KNN.h"
-#include "Preprocess.h"
+#include "Dataprocess.h"
 #include "DecisionTree.h"
 #include "Evaluation.h"
 #define SPLITWEIGHT 0.8
@@ -17,21 +17,21 @@ int main() {
 
 	//Coyp DataSet for KNN and normalize it
 	set dataSetCopy = dataSet;
-	PRERPOCESS::normalizeAllFactorsExcept(dataSetCopy, 11);
+	DATARPOCESS::normalizeAllFactorsExcept(dataSetCopy, 11);
 
 
 	//Seperate data into trainingSet and testSet
-	std::tuple<set, set> setPair = PRERPOCESS::seperateSet(dataSetCopy, SPLITWEIGHT);
+	std::tuple<set, set> setPair = DATARPOCESS::seperateSet(dataSetCopy, SPLITWEIGHT);
 	set trainningSet = get<0>(setPair);
 	set testSet = get<1>(setPair);
-	vector<int> originalLabel = PRERPOCESS::getLabels(testSet);
+	vector<int> originalLabel = DATARPOCESS::getLabels(testSet);
 
 
 
 
 	//Rebalance trainingSet
 	double balanceWeights[3] = { 1,5,1 };
-	vector<Node> balanceSet = PRERPOCESS::rebalanceSet(trainningSet, balanceWeights);
+	vector<Node> balanceSet = DATARPOCESS::rebalanceSet(trainningSet, balanceWeights);
 
 
 	double weights[12] = {1,1,1,1,1,1,1,1,1,1,1,1};
