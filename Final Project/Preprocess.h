@@ -18,7 +18,7 @@ public:
 
 	static set rebalanceSet(set& dataSet, double* balanceWeights);
 
-
+	static std::vector<int> getLabels(set& dataSet);
 };
 
 #endif

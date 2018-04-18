@@ -122,3 +122,13 @@ set PRERPOCESS::rebalanceSet(set & dataSet, double * balanceWeights)
 	}
 	return newDataSet;
 }
+
+std::vector<int> PRERPOCESS::getLabels(set & dataSet)
+{
+	int size = dataSet.size();
+	std::vector<int> labels;
+	for (int i = 0; i < size; i++) {
+		labels.push_back(dataSet[i].getLabel());
+	}
+	return labels;
+}

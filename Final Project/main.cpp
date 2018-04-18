@@ -5,6 +5,7 @@
 #include "KNN.h"
 #include "Preprocess.h"
 #include "DecisionTree.h"
+#include "Evaluation.h"
 #define SPLITWEIGHT 0.8
 using namespace std;
 
@@ -23,9 +24,13 @@ int main() {
 	std::tuple<set, set> setPair = PRERPOCESS::seperateSet(dataSetCopy, SPLITWEIGHT);
 	set trainningSet = get<0>(setPair);
 	set testSet = get<1>(setPair);
+	vector<int> originalLabel = PRERPOCESS::getLabels(testSet);
+
+
+
 
 	//Rebalance trainingSet
-	double balanceWeights[3] = { 1,2,1 };
+	double balanceWeights[3] = { 1,5,1 };
 	vector<Node> balanceSet = PRERPOCESS::rebalanceSet(trainningSet, balanceWeights);
 
 
@@ -33,8 +38,11 @@ int main() {
 
 	KNN cif;
 	cif.fit(balanceSet, balanceSet.size());
-	cout << "Predict Label: " << cif.predictNode(testSet[0]) << endl;
+	vector<int> predictLabel = cif.predict(testSet);
+	double accuracy = Evaluation::accuracy(originalLabel, predictLabel);
 
+	cout << "Accuracy: " << accuracy << endl;
+	Evaluation::confusionMatrix(originalLabel, predictLabel);
 	// Decision Tree Implementation
 	Tree tree;
 	Tree * DT = &tree;

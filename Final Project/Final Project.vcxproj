@@ -115,6 +115,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Evaluation.cpp" />
     <ClCompile Include="ExcelReader.cpp" />
     <ClCompile Include="KNN.cpp" />
     <ClCompile Include="main.cpp" />
@@ -123,6 +124,7 @@
     <ClCompile Include="DecisionTree.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Evaluation.h" />
     <ClInclude Include="ExcelReader.h" />
     <ClInclude Include="DecisionTree.h" />
     <ClInclude Include="KNN.h" />
