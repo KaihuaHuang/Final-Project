@@ -4,6 +4,7 @@
 #include "ExcelReader.h"
 #include "KNN.h"
 #include "Preprocess.h"
+#include "DecisionTree.h"
 using namespace std;
 
 int main() {
@@ -24,5 +25,11 @@ int main() {
 	cif.fit(dataSet, dataSet.size());
 	cout << "Predict Label: " << cif.predictNode(dataSet[0]) << endl;
 
+	// Decision Tree Implementation
+	Tree tree;
+	Tree * DT = &tree;
+	//DT = DT->buildTree(DT, dataSet);
+	//vector<string> attributeName;
+	//DT->display(attributeName,0);
 
 }

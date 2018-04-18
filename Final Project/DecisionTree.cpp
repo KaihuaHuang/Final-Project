@@ -1,5 +1,4 @@
 #include <string>
-#include <map>
 #include <cmath>
 #include <algorithm>
 #include "DecisionTree.h"
@@ -11,7 +10,7 @@ using namespace std;
 vector<double> getTargets(vector<Node> dataSet) {
 	vector<double> result3mo;
 	for (int i = 0; i < dataSet.size(); ++i) {
-		result3mo.push_back(double(dataSet[i].getLabel()));
+		result3mo.push_back((double)(dataSet[i].getLabel()));
 	}
 	return result3mo;
 }
@@ -56,7 +55,8 @@ vector<double> getCutOffs(vector<Node> dataSet, int attributeIndex) {
 	vector < double > sortedValues = sortAttributeValues(dataSet, attributeIndex);
 	vector < double > sortedTargets = sortTargetValues(dataSet, attributeIndex);
 	for (int i = 0; i < sortedValues.size() - 1; i++) {
-		if ((sortedValues[i] != sortedValues[i + 1]) & (sortedTargets[i] != sortedTargets[i + 1])) {
+		//if ((sortedValues[i] != sortedValues[i + 1]) & (sortedTargets[i] != sortedTargets[i + 1])) {
+		if ((abs(sortedValues[i]-sortedValues[i + 1])>1) & (sortedTargets[i] != sortedTargets[i + 1])) {
 			cutOffs.push_back((sortedValues[i] + sortedValues[i + 1]) / 2.);
 		}
 	}
@@ -90,8 +90,8 @@ map<string, vector<double>> getAttributeBisectParts(vector<Node> dataSet, int at
 // C4.5 Entrogy and Information Gain Calculations
 vector<double> uniqueValues(vector<double> val) {
 	sort(val.begin(), val.end());
-	unique(val.begin(), val.end());
-	//unique(val.begin(), val.end(), [](double x, double y) { return (int(x) == int(y)); });
+	val.erase(unique(val.begin(),val.end()), val.end());
+	//val.erase(unique(val.begin(), val.end(), [](double x, double y) { return (int(x) == int(y)); }), val.end());
 	return val;
 }
 
@@ -100,7 +100,7 @@ double frequentValues(vector<double> val) {
 	int* Count = new int[uniqueVal.size()]{ 0 };
 	for (int i = 0; i < val.size(); i++) {
 		for (int j = 0; j < uniqueVal.size(); j++) {
-			Count[j] = count(val.begin(), val.end(), uniqueVal[j]);
+			Count[j] = int(count(val.begin(), val.end(), uniqueVal[j]));
 		}
 	}
 
@@ -125,14 +125,14 @@ double computeEntropy(vector<double> values) {
 	else {
 		for (int i = 0; i < values.size(); ++i) {
 			for (int j = 0; j < valueRange.size(); ++j) {
-				if (values[i] == values[j]) { count[j] += 1; }
+				if (values[i] == valueRange[j]) { count[j] += 1; }
 			}
 		}
 	}
 
 	double tempP, tempEntropy;
 	for (int j = 0; j < valueRange.size(); ++j) {
-		tempP = count[j] / values.size();
+		tempP = (double)count[j] / (double)(values.size());
 		tempEntropy = -tempP * log2(tempP);
 		entropy += tempEntropy;
 	}
@@ -146,24 +146,23 @@ double computeAttributeEntropy(vector<Node> dataSet, int attributeIndex) {
 	return computeEntropy(values);
 }
 
-double computeInfoGain(vector<Node> dataSet, int attributeIndex, double cutOff = 0) {
+double computeInfoGain(vector<Node> dataSet, int attributeIndex, double cutOff) {
 	double originalEntropy = 0., afterEntropy = 0., gainedEntropy = 0.;
 	
 	vector<double> targets = getTargets(dataSet);
 	originalEntropy = computeEntropy(targets);
 	
 	map<string, vector<double>> parts = getAttributeBisectParts(dataSet, attributeIndex, cutOff);
-	double lowerLen = parts["Lower_Scores"].size();
-	double upperLen = parts["Upper_Scores"].size();
+	double lowerLen = (double)(parts["Lower_Scores"].size());
+	double upperLen = (double)(parts["Upper_Scores"].size());
 	double len = lowerLen + upperLen;
 	afterEntropy = lowerLen / len * computeEntropy(parts["Lower_Scores"]) 
 				   + upperLen / len * computeEntropy(parts["Upper_Scores"]);
 	gainedEntropy = originalEntropy - afterEntropy;
-	
 	return gainedEntropy;
 }
 
-double computeGainRatio(vector<Node> dataSet, int attributeIndex, double cutOff = 0) {
+double computeGainRatio(vector<Node> dataSet, int attributeIndex, double cutOff) {
 	double attributeEntropy = computeAttributeEntropy(dataSet, attributeIndex);
 	double attributeInfoGain = computeInfoGain(dataSet, attributeIndex, cutOff);
 	return (attributeInfoGain / attributeEntropy);
@@ -172,7 +171,7 @@ double computeGainRatio(vector<Node> dataSet, int attributeIndex, double cutOff 
 
 
 // Decision Tree
-Tree::Tree(double p = 0.95) : StopCriteria(p) { DecisionNode = 0; Branch = ""; }
+Tree::Tree(double p) : StopCriteria(p) { DecisionNode = 0; Branch = ""; }
 
 void Tree::setDecisionNode(int& inputDecisionNode) { DecisionNode = inputDecisionNode; }
 
@@ -188,8 +187,10 @@ vector<Tree*> Tree::getChild() const { return Child; }
 
 double Tree::getStopCriteria() const { return StopCriteria; }
 
-Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet) {
+Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet) {	//attribute need to be taken off once used
 	
+	cout << "Build Tree Continue!" << endl;
+
 	vector<double> cluster = getTargets(dataSet);
 	vector<double> uniqueTargets = uniqueValues(cluster);
 	int leaf;
@@ -201,8 +202,8 @@ Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet) {
 		return tree;
 	}
 
-	//Stop cluster's size <= 5
-	if(cluster.size() <= 5) {
+	//Stop cluster's size <= 10
+	if(cluster.size() <= 10) {
 		leaf = int(frequentValues(cluster));
 		tree->setDecisionNode(leaf);
 		return tree;
@@ -212,7 +213,7 @@ Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet) {
 	int* Count = new int[uniqueTargets.size()]{ 0 };
 	for (int i = 0; i < cluster.size(); ++i) {
 		for (int j = 0; j < uniqueTargets.size(); ++j) {
-			Count[j] = count(cluster.begin(), cluster.end(), uniqueTargets[j]);
+			Count[j] = int(count(cluster.begin(), cluster.end(), uniqueTargets[j]));
 		}
 	}
 	for (int i = 0; i < uniqueTargets.size(); ++i) {
@@ -286,7 +287,19 @@ Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet) {
 	return tree;
 }
 
-void Tree::display(int Depth) {
+void Tree::display(vector<string> attributeName, int depth) {
 	// when display, display the header instead of attribute index
+	for (int i = 0; i < depth; ++i) { std::cout << "\t"; }
+	if (this->Branch != "") {
+		std::cout << this->Branch << endl;
+		//for (int i = 0; i < depth + 1; ++i) { std::cout << "\t";}
+	}
 
+	//string attribute = attributeName[this->DecisionNode];
+	//std::cout << attribute << endl;
+	cout << this->DecisionNode << endl;
+	
+	for (int i = 0; i < this->Child.size(); ++i) {
+		(this->Child[i])->display(attributeName, depth + 1);
+	}
 }
