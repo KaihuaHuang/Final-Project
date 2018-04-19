@@ -43,6 +43,7 @@ int main() {
 
 	cout << "Accuracy: " << accuracy << endl;
 	Evaluation::confusionMatrix(originalLabel, predictLabel);
+	
 	// Decision Tree Implementation
 	Tree tree(0.8);
 	Tree * DT = &tree;

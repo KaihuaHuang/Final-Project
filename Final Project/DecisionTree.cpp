@@ -56,7 +56,7 @@ vector<double> getCutOffs(vector<Node> dataSet, int attributeIndex) {
 	vector < double > sortedTargets = sortTargetValues(dataSet, attributeIndex);
 	for (int i = 0; i < sortedValues.size() - 1; i++) {
 		//if ((sortedValues[i] != sortedValues[i + 1]) & (sortedTargets[i] != sortedTargets[i + 1])) {
-		if ((abs(sortedValues[i]-sortedValues[i + 1])>1) & (sortedTargets[i] != sortedTargets[i + 1])) {
+		if ((abs(sortedValues[i]-sortedValues[i + 1])>0.5) & (sortedTargets[i] != sortedTargets[i + 1])) {
 			cutOffs.push_back((sortedValues[i] + sortedValues[i + 1]) / 2.);
 		}
 	}
@@ -276,9 +276,10 @@ Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet, int depth) {	//attribute
 	double tempGainRatio, tempInfoGain, maxCutOff;
 	int maxAttributeIndex = 0;
 	int numAttribute = dataSet[0].getFactorNum();
-	for (int i = 0; i < numAttribute; ++i) {
+	for (int i = 0; i < numAttribute-1; ++i) {
 		// int attributeIndex = i;
 		vector<double> cutOff = getCutOffs(dataSet, i);
+		cout << "AttributeUsed:" << i << endl;
 		for (int j = 0; j < cutOff.size(); ++j) {
 			tempInfoGain = computeInfoGain(dataSet, i, cutOff[j]);
 			if (tempInfoGain > infoGain) {
@@ -286,8 +287,14 @@ Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet, int depth) {	//attribute
 				maxCutOff = cutOff[j];
 			}
 		}
-
-		tempGainRatio = computeGainRatio(dataSet, i, maxCutOff);
+		try {
+			tempGainRatio = computeGainRatio(dataSet, i, maxCutOff);
+		}
+		catch (...) {
+			for (auto& e : dataSet) {
+				cout << e << endl;
+			}
+		}
 		if (tempGainRatio > gainRatio) {
 			gainRatio = tempGainRatio;
 			maxAttributeIndex = i;
@@ -314,6 +321,7 @@ Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet, int depth) {	//attribute
 	parts["upperValue"] = row2;
 
 	cout << "Depth: " << depth << endl;
+	cout << "CutOff: " << maxCutOff << '\n' << endl;
 	cout << "MaxAttribute: " << maxAttributeIndex << '\n' << endl;
 
 	// Build the tree
