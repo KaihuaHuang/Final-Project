@@ -13,7 +13,6 @@ private:
 	string Branch;	// either "<cutOff" or ">cutOff"
 	vector<Tree*> Child; // 2 children if bisection
 	double StopCriteria;
-	
 public:
 	Tree(double p = 0.95);
 	void setDecisionNode(int& inputDecisionNode);

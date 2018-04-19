@@ -132,3 +132,8 @@ std::vector<int> DATARPOCESS::getLabels(set & dataSet)
 	}
 	return labels;
 }
+
+std::tuple<set, set> DATARPOCESS::cutSet(set & dataSet, int accordingFactor, double accordingValue)
+{
+	return std::tuple<set, set>();
+}

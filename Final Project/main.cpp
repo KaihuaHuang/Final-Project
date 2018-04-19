@@ -46,7 +46,7 @@ int main() {
 	// Decision Tree Implementation
 	Tree tree;
 	Tree * DT = &tree;
-	//DT = DT->buildTree(DT, dataSet);
+	DT = DT->buildTree(DT, dataSet);
 	//vector<string> attributeName;
 	//DT->display(attributeName,0);
 

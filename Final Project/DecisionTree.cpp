@@ -56,7 +56,7 @@ vector<double> getCutOffs(vector<Node> dataSet, int attributeIndex) {
 	vector < double > sortedTargets = sortTargetValues(dataSet, attributeIndex);
 	for (int i = 0; i < sortedValues.size() - 1; i++) {
 		//if ((sortedValues[i] != sortedValues[i + 1]) & (sortedTargets[i] != sortedTargets[i + 1])) {
-		if ((abs(sortedValues[i]-sortedValues[i + 1])>1) & (sortedTargets[i] != sortedTargets[i + 1])) {
+		if ((abs(sortedValues[i]-sortedValues[i + 1])>0.1) && (sortedTargets[i] != sortedTargets[i + 1])) {
 			cutOffs.push_back((sortedValues[i] + sortedValues[i + 1]) / 2.);
 		}
 	}
@@ -65,7 +65,9 @@ vector<double> getCutOffs(vector<Node> dataSet, int attributeIndex) {
 
 map<string, vector<double>> getAttributeBisectParts(vector<Node> dataSet, int attributeIndex, double cutoff) {
 	map <string, vector<double>> bisectParts;
+	// Get all the attribute values and sort them
 	vector < double > sortedValues = sortAttributeValues(dataSet, attributeIndex);
+	// Get all the label values and sort them according to attribute values
 	vector < double > sortedTargets = sortTargetValues(dataSet, attributeIndex);
 	vector < double > row1, row2, row3, row4;
 	for (int i = 0; i < sortedValues.size(); ++i) {
@@ -144,11 +146,13 @@ double computeEntropy(vector<double> values) {
 }
 
 
+// Calculate Split Info
 double computeAttributeEntropy(vector<Node> dataSet, int attributeIndex) {
 	// get a vector of values associated with given attribute
 	vector<double> values = getAttributeValues(dataSet, attributeIndex);
 	return computeEntropy(values);
 }
+
 
 double computeInfoGain(vector<Node> dataSet, int attributeIndex, double cutOff) {
 	double originalEntropy = 0., afterEntropy = 0., gainedEntropy = 0.;
@@ -165,6 +169,7 @@ double computeInfoGain(vector<Node> dataSet, int attributeIndex, double cutOff) 
 	gainedEntropy = originalEntropy - afterEntropy;
 	return gainedEntropy;
 }
+
 
 double computeGainRatio(vector<Node> dataSet, int attributeIndex, double cutOff) {
 	double attributeEntropy = computeAttributeEntropy(dataSet, attributeIndex);
@@ -232,7 +237,7 @@ Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet) {	//attribute need to be
 	double infoGain = 0, gainRatio = 0;
 	double tempGainRatio, tempInfoGain, maxCutOff;
 	int maxAttributeIndex = 0;
-	int numAttribute = dataSet[0].getFactorNum();
+	int numAttribute = dataSet[0].getFactorNum()-1;
 	for (int i = 0; i < numAttribute; ++i) {
 		// int attributeIndex = i;
 		vector<double> cutOff = getCutOffs(dataSet, i);

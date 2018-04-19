@@ -19,6 +19,8 @@ public:
 	static set rebalanceSet(set& dataSet, double* balanceWeights);
 
 	static std::vector<int> getLabels(set& dataSet);
+
+	static std::tuple<set, set> cutSet(set& dataSet, int accordingFactor, double accordingValue);
 };
 
 #endif

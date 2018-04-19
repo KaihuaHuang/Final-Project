@@ -21,14 +21,23 @@ void ExcelReader::parser(Node & node, std::stringstream & ss)
 		}
 		if (count == 11) {
 			int industry;
-			try {
-				industry = industryCode.at(part);
+			if (industryCode.find(part) != industryCode.end()) {
+				industry = industryCode[part];
 			}
-			catch (...) {
-				industryCode[part] = code;
+			else {
+				industryCode.insert(map<string, int>::value_type(part, code));
 				industry = code;
 				code++;
 			}
+			/*try {
+				industry = industryCode.at(part);
+			}
+			catch (...) {
+				industryCode.insert(map<string, int>::value_type(part, code));
+				//industryCode[part] = code;
+				industry = code;
+				code++;
+			}*/
 			facArray[FACTORNUMBER - 1] = industry;
 			count++;
 			continue;
