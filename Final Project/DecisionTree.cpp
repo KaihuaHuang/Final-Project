@@ -116,6 +116,25 @@ double frequentValues(vector<double> val) {
 	return uniqueVal[maxIndex];
 }
 
+// Return the percentage frequency of a value
+double computeFrequency(vector<double> cluster, vector<double> uniqueTargets, double mostFrequentVal) {
+	int index;
+	vector<double> frequency;
+	int* Count = new int[uniqueTargets.size()]{ 0 };
+
+	for (int i = 0; i < cluster.size(); ++i) {
+		for (int j = 0; j < uniqueTargets.size(); ++j) {
+			Count[j] = int(count(cluster.begin(), cluster.end(), uniqueTargets[j]));
+		}
+	}
+
+	for (int i = 0; i < uniqueTargets.size(); ++i) {
+		frequency.push_back((double)(Count[i] / cluster.size()));
+		if (uniqueTargets[i] == mostFrequentVal) { index = i; }
+	}
+	return frequency[index];
+}
+
 //Calculate the entropy
 double computeEntropy(vector<double> values) {
 
@@ -142,7 +161,6 @@ double computeEntropy(vector<double> values) {
 
 	return entropy;
 }
-
 
 double computeAttributeEntropy(vector<Node> dataSet, int attributeIndex) {
 	// get a vector of values associated with given attribute
@@ -175,7 +193,7 @@ double computeGainRatio(vector<Node> dataSet, int attributeIndex, double cutOff)
 
 
 // Decision Tree
-Tree::Tree(double p) : StopCriteria(p) { DecisionNode = 0; Branch = ""; }
+Tree::Tree(double p) : StopCriteria(p) { Depth = 0; Leaf = false; }
 
 void Tree::setDecisionNode(int& inputDecisionNode) { DecisionNode = inputDecisionNode; }
 
@@ -183,49 +201,74 @@ void Tree::setBranch(string& inputBranch) { Branch = inputBranch; }
 
 void Tree::addChild(Tree* inputChild) { Child.push_back(inputChild); }
 
+void Tree::setLeaf(bool inputLeaf) { Leaf = inputLeaf; }
+
+void Tree::setDepth(int& inputDepth) { Depth = inputDepth; }
+
 int Tree::getDecisionNode() const { return DecisionNode; }
 
 string Tree::getBranch() const { return Branch; }
 
 vector<Tree*> Tree::getChild() const { return Child; }
 
+bool Tree::isLeaf() const { return Leaf; }
+
+int Tree::getDepth() const { return Depth; }
+
 double Tree::getStopCriteria() const { return StopCriteria; }
 
-Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet) {	//attribute need to be taken off once used
+Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet, int depth) {	//attribute need to be taken off once used
 	
 	cout << "Build Tree Continue!" << endl;
 
 	vector<double> cluster = getTargets(dataSet);
 	vector<double> uniqueTargets = uniqueValues(cluster);
 	int leaf;
+	int mostFrequentVal = int(frequentValues(cluster));
+	double frequency = computeFrequency(cluster, uniqueTargets, mostFrequentVal);
 
 	// DecisionNode here is Leaf Node
 	if (uniqueTargets.size() == 1) {
 		leaf = int(uniqueTargets[0]);
 		tree->setDecisionNode(leaf);
+		tree->setLeaf(true);
+		tree->setDepth(depth);
+		cout << "Depth: " << depth << endl;
+		cout << "Unique Leaf: " << leaf << '\n' << endl;
 		return tree;
-	}
 
+	}
 	//Stop cluster's size <= 10
-	if(cluster.size() <= 10) {
-		leaf = int(frequentValues(cluster));
+	else if (cluster.size() <= 10) {
+		leaf = mostFrequentVal;
 		tree->setDecisionNode(leaf);
+		tree->setLeaf(true);
+		tree->setDepth(depth);
+		cout << "Depth: " << depth << endl;
+		cout << "Size<=10 Leaf: " << leaf << '\n' << endl;
 		return tree;
-	}
 
-	// Stop if reach 95% similarity
-	int* Count = new int[uniqueTargets.size()]{ 0 };
-	for (int i = 0; i < cluster.size(); ++i) {
-		for (int j = 0; j < uniqueTargets.size(); ++j) {
-			Count[j] = int(count(cluster.begin(), cluster.end(), uniqueTargets[j]));
-		}
 	}
-	for (int i = 0; i < uniqueTargets.size(); ++i) {
-		if ((Count[i] / cluster.size()) >= 0.95) {
-			leaf = int(uniqueTargets[i]);
-			tree->setDecisionNode(leaf);
-			return tree;
-		}
+	// Stop if reach 95% similarity
+	else if (frequency >= tree->getStopCriteria()) {
+		leaf = mostFrequentVal;
+		tree->setDecisionNode(leaf);
+		tree->setLeaf(true);
+		tree->setDepth(depth);
+		cout << "Depth: " << depth << endl;
+		cout << "95% Leaf: " << leaf << '\n' << endl;
+		return tree;
+
+	}
+	// Stop if reach depth of 5
+	else if (depth == 5) {
+		leaf = mostFrequentVal;
+		tree->setDecisionNode(leaf);
+		tree->setLeaf(true);
+		tree->setDepth(depth);
+		cout << "Depth: " << depth << endl;
+		cout << "Depth=5 Leaf: " << leaf << '\n' << endl;
+		return tree;
 	}
 
 	// Determine attribute and cutoff point for the attribute with max info gain
@@ -252,6 +295,7 @@ Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet) {	//attribute need to be
 	}
 
 	// Construct the node and branches
+	tree->setDepth(depth);
 	tree->setDecisionNode(maxAttributeIndex);
 	vector<string> values = { "lowerValue","upperValue" };
 	string leftBranch = "< " + to_string(maxCutOff);
@@ -269,22 +313,16 @@ Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet) {	//attribute need to be
 	parts["lowerValue"] = row1;
 	parts["upperValue"] = row2;
 
+	cout << "Depth: " << depth << endl;
+	cout << "MaxAttribute: " << maxAttributeIndex << '\n' << endl;
+
 	// Build the tree
 	for (int i = 0; i < branches.size(); ++i) {
 		Tree* newTree = new Tree(tree->getStopCriteria());
 		newTree->setBranch(branches[i]);
-
 		vector<Node> dataSetRemain = parts[values[i]];
-		vector<double> cluster = getTargets(dataSetRemain);
-		vector<double> newUniqueTargets = uniqueValues(cluster);
 
-		if (newUniqueTargets.size() == 1) { 
-			int leaf = int(newUniqueTargets[0]);
-			newTree->setDecisionNode(leaf);
-		}
-		else {
-			buildTree(newTree, dataSetRemain);
-		}
+		buildTree(newTree, dataSetRemain, depth + 1);
 		tree->addChild(newTree);
 	}
 
@@ -296,7 +334,7 @@ void Tree::display(vector<string> attributeName, int depth) {
 	for (int i = 0; i < depth; ++i) { std::cout << "\t"; }
 	if (this->Branch != "") {
 		std::cout << this->Branch << endl;
-		//for (int i = 0; i < depth + 1; ++i) { std::cout << "\t";}
+		for (int i = 0; i < depth + 1; ++i) { std::cout << "\t";}
 	}
 
 	//string attribute = attributeName[this->DecisionNode];
@@ -306,4 +344,28 @@ void Tree::display(vector<string> attributeName, int depth) {
 	for (int i = 0; i < this->Child.size(); ++i) {
 		(this->Child[i])->display(attributeName, depth + 1);
 	}
+}
+
+int Tree::predictNode(Node point) {
+	if (isLeaf()) { return getDecisionNode(); }
+	else {
+		Tree* remainTree = new Tree(getStopCriteria());
+		int attributeIndex = getDecisionNode();
+		double attributeVal = point.getFactor(attributeIndex);
+		string branch = getChild()[0]->getBranch();
+		double cutoff = stod(branch.substr(2));
+		if (attributeVal < cutoff) { remainTree = getChild()[0]; }
+		else if (attributeVal < cutoff) { remainTree = getChild()[1]; }
+		remainTree->predictNode(point);
+	}
+}
+
+vector<int> Tree::predict(vector<Node> dataSet) {
+	vector<int> result;
+
+	for (int i = 0; i < dataSet.size(); ++i) {
+		result.push_back(predictNode(dataSet[i]));
+	}
+
+	return result; 
 }
