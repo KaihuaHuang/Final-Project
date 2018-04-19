@@ -322,8 +322,10 @@ Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet, int depth) {	//attribute
 		newTree->setBranch(branches[i]);
 		vector<Node> dataSetRemain = parts[values[i]];
 
-		buildTree(newTree, dataSetRemain, depth + 1);
-		tree->addChild(newTree);
+		if(dataSetRemain.size() != 0){
+			buildTree(newTree, dataSetRemain, depth + 1);
+			tree->addChild(newTree);
+		}
 	}
 
 	return tree;
