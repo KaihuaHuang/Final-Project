@@ -52,13 +52,13 @@ int main() {
 	vector<int> attributes;
 	for (int i = 0; i < factorNum - 1; ++i) { attributes.push_back(i); }
 	DT = DT->buildTree(DT, dataSet,0,attributes);
-	//vector<string> attributeName;
-	//DT->display(attributeName,0);
+	// Display the tree structure
+	vector<string> attributeName;
+	DT->display(attributeName);
 
 	// Label Prediction using testSet
 	vector<int> predictLabel_DT = DT->predict(testSet);
 	double accuracy_DT = Evaluation::accuracy(originalLabel, predictLabel_DT);
-
 	cout << "Accuracy: " << accuracy_DT << endl;
 	Evaluation::confusionMatrix(originalLabel, predictLabel_DT);
 

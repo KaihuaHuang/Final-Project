@@ -224,7 +224,7 @@ Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet, int depth, vector<int> a
 	int mostFrequentVal = int(frequentValues(cluster));
 	double frequency = computeFrequency(cluster, uniqueTargets, mostFrequentVal);
 	
-	cout << "Build Tree Continue! Depth = " << depth << ", DataSet Size = " << dataSet.size() << endl;
+	//cout << "Build Tree Continue! Depth = " << depth << ", DataSet Size = " << dataSet.size() << endl;
 
 	// DecisionNode here is Leaf Node
 	if (uniqueTargets.size() == 1) {
@@ -310,7 +310,7 @@ Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet, int depth, vector<int> a
 	auto it = attributes.erase(ita);
 	vector<string> values = { "lowerValue","upperValue" };
 	string leftBranch = "< " + to_string(maxCutOff);
-	string rightBranch = "< " + to_string(maxCutOff);
+	string rightBranch = "> " + to_string(maxCutOff);
 	vector<string> branches = { leftBranch,rightBranch };
 
 	// Construct dataSet for each branches
@@ -345,15 +345,21 @@ Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet, int depth, vector<int> a
 
 void Tree::display(vector<string> attributeName, int depth) {
 	// when display, display the header instead of attribute index
-	for (int i = 0; i < depth; ++i) { std::cout << "\t"; }
+
+	for (int i = 0; i < depth; ++i) { 
+		std::cout << "\t"; 
+	}
 	if (this->Branch != "") {
 		std::cout << this->Branch << endl;
-		for (int i = 0; i < depth + 1; ++i) { std::cout << "\t";}
+		for (int i = 0; i < depth + 1; ++i) { 
+			std::cout << "\t";
+		}
 	}
 
 	//string attribute = attributeName[this->DecisionNode];
 	//std::cout << attribute << endl;
-	cout << this->DecisionNode << endl;
+	if (this->isLeaf()) { cout << this->DecisionNode << "(Leaf Node)" << endl; }
+	else { cout << this->DecisionNode << endl; }
 	
 	for (int i = 0; i < this->Child.size(); ++i) {
 		(this->Child[i])->display(attributeName, depth + 1);
