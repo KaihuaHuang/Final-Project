@@ -45,10 +45,21 @@ int main() {
 	Evaluation::confusionMatrix(originalLabel, predictLabel);
 	
 	// Decision Tree Implementation
+	// Tree Construction using trainningSet
 	Tree tree(0.8);
 	Tree * DT = &tree;
-	//DT = DT->buildTree(DT, dataSet,0);
+	int factorNum = trainningSet[0].getFactorNum();
+	vector<int> attributes;
+	for (int i = 0; i < factorNum - 1; ++i) { attributes.push_back(i); }
+	DT = DT->buildTree(DT, dataSet,0,attributes);
 	//vector<string> attributeName;
 	//DT->display(attributeName,0);
+
+	// Label Prediction using testSet
+	vector<int> predictLabel_DT = DT->predict(testSet);
+	double accuracy_DT = Evaluation::accuracy(originalLabel, predictLabel_DT);
+
+	cout << "Accuracy: " << accuracy_DT << endl;
+	Evaluation::confusionMatrix(originalLabel, predictLabel_DT);
 
 }

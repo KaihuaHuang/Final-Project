@@ -30,7 +30,7 @@ public:
 	int getDepth() const;
 	double getStopCriteria() const;
 	// Build and display tree
-	Tree* buildTree(Tree* tree, vector<Node> dataSet, int depth);
+	Tree* buildTree(Tree* tree, vector<Node> dataSet, int depth, vector<int> attributes);
 	void display(vector<string> attributeName, int depth = 0);
 
 	// Return the predict labels
