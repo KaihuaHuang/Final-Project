@@ -321,6 +321,10 @@ Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet, int depth, vector<int> a
 		if (attributeValue < maxCutOff) { row1.push_back(dataSet[i]); }
 		else { row2.push_back(dataSet[i]); }
 	}
+	//Try to release memory
+	dataSet.clear();
+	dataSet.shrink_to_fit();
+
 	parts["lowerValue"] = row1;
 	parts["upperValue"] = row2;
 

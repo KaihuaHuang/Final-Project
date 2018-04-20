@@ -13,6 +13,7 @@ int main() {
 	//Read from csv file
 	string fileName("dataSet.csv");
 	ExcelReader reader(fileName);
+	vector<string> attributeName = reader.readHeader(11, 1);
 	set dataSet = reader.readFile();
 
 	//Coyp DataSet for KNN and normalize it
@@ -51,15 +52,23 @@ int main() {
 	int factorNum = trainningSet[0].getFactorNum();
 	vector<int> attributes;
 	for (int i = 0; i < factorNum - 1; ++i) { attributes.push_back(i); }
-	DT = DT->buildTree(DT, dataSet,0,attributes);
+
+	setPair = DATARPOCESS::seperateSet(dataSet, SPLITWEIGHT);
+	set trainningSetDT = get<0>(setPair);
+	set testSetDT = get<1>(setPair);
+
+	balanceWeights[2] = 3;
+	balanceWeights[1] = 4;
+	vector<Node> balanceSetDT = DATARPOCESS::rebalanceSet(trainningSetDT, balanceWeights);
+	DT = DT->buildTree(DT, balanceSetDT,0,attributes);
 	// Display the tree structure
-	vector<string> attributeName;
+	//vector<string> attributeName = reader.readHeader(12,1);
 	DT->display(attributeName);
 
 	// Label Prediction using testSet
-	vector<int> predictLabel_DT = DT->predict(testSet);
+	vector<int> predictLabel_DT = DT->predict(testSetDT);
 	double accuracy_DT = Evaluation::accuracy(originalLabel, predictLabel_DT);
 	cout << "Accuracy: " << accuracy_DT << endl;
 	Evaluation::confusionMatrix(originalLabel, predictLabel_DT);
 
-}
+ }

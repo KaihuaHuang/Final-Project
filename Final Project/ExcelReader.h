@@ -15,6 +15,7 @@ private:
 public:
 	ExcelReader(std::string& inputFileName,bool inputHeader = true);
 	std::vector<Node> readFile();
+	std::vector<std::string> readHeader(int factorNum,int skip = 0);
 
 
 };

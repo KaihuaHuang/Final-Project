@@ -93,3 +93,24 @@ std::vector<Node> ExcelReader::readFile()
 	
 	return result;
 }
+
+std::vector<string> ExcelReader::readHeader(int factorNum, int skip)
+{
+	file.clear();
+	file.seekg(0, istream::beg);
+	std::vector<string> header;
+	string readline;
+	for(int i =0;i<skip;i++){
+		getline(file, readline,',');
+	}
+	for (int i = 0; i < factorNum; i++) {
+		getline(file, readline, ',');
+		if (readline == "Industry Type") {
+			i--;
+			continue;
+		}
+		header.push_back(readline);
+	}
+
+	return header;
+}
