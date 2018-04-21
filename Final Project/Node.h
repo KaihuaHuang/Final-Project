@@ -25,6 +25,8 @@ public:
 	double* getFactors() const;
 	int getFactorNum() const;
 	friend std::ostream& operator<<(std::ostream& os, const Node& node);
+
+	~Node();
 };
 
 #endif

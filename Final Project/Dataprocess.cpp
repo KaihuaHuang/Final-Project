@@ -1,5 +1,6 @@
 #include "Dataprocess.h"
 #include <algorithm>
+#include <ctime>
 #define LABELNUM 3
 void DATARPOCESS::normalizeFactor(set& dataSet, int n)
 {
@@ -108,6 +109,7 @@ set DATARPOCESS::rebalanceSet(set & dataSet, double * balanceWeights)
 	}
 	
 	std::vector<Node> newDataSet;
+	std::srand(std::time(0));
 	std::random_shuffle(up.begin(), up.end());
 	std::random_shuffle(no_change.begin(), no_change.end());
 	std::random_shuffle(down.begin(), down.end());

@@ -114,3 +114,8 @@ int Node::getFactorNum() const
 {
 	return factorNum;
 }
+
+Node::~Node()
+{
+	//delete this->factors; 
+}

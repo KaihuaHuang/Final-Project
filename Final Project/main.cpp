@@ -57,7 +57,7 @@ int main() {
 	set trainningSetDT = get<0>(setPair);
 	set testSetDT = get<1>(setPair);
 
-	balanceWeights[2] = 3;
+	balanceWeights[2] = 2;
 	balanceWeights[1] = 4;
 	vector<Node> balanceSetDT = DATARPOCESS::rebalanceSet(trainningSetDT, balanceWeights);
 	DT = DT->buildTree(DT, balanceSetDT,0,attributes);
@@ -70,5 +70,8 @@ int main() {
 	double accuracy_DT = Evaluation::accuracy(originalLabel, predictLabel_DT);
 	cout << "Accuracy: " << accuracy_DT << endl;
 	Evaluation::confusionMatrix(originalLabel, predictLabel_DT);
+	/*for (int i = 0; i < predictLabel_DT.size(); i++) {
+		cout << predictLabel_DT[i] << "  " << predictLabel[i] << "  " << originalLabel[i] << endl;
+	}*/
 
  }
