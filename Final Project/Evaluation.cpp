@@ -31,6 +31,7 @@ void Evaluation::confusionMatrix(std::vector<int> original, std::vector<int> pre
 	cout << setw(4) << "-1" << setw(4) << matrix[0][0] << setw(4) << matrix[0][1] << setw(4) << matrix[0][2] << endl;
 	cout << setw(4) << "0" << setw(4) << matrix[1][0] << setw(4) << matrix[1][1] << setw(4) << matrix[1][2] << endl;
 	cout << setw(4) << "1" << setw(4) << matrix[2][0] << setw(4) << matrix[2][1] << setw(4) << matrix[2][2] << endl;
+	cout << '\n' << endl;
 }
 
 std::vector<int> Evaluation::vote(std::vector<int> KNNpredict, std::vector<int> DTpredict)

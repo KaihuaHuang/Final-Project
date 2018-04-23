@@ -42,6 +42,7 @@ int main() {
 	vector<int> predictLabel = cif.predict(testSet);
 	double accuracy = Evaluation::accuracy(originalLabel, predictLabel);
 
+	cout << "***** KNN Prediction Results *****" << endl;
 	cout << "Accuracy: " << accuracy << endl;
 	Evaluation::confusionMatrix(originalLabel, predictLabel);
 	
@@ -60,21 +61,26 @@ int main() {
 	balanceWeights[1] = 4;
 	vector<Node> balanceSetDT = DATARPOCESS::rebalanceSet(trainningSetDT, balanceWeights);
 	DT = DT->buildTree(DT, balanceSetDT,0,attributes);
+	
 	// Display the tree structure
-	//vector<string> attributeName = reader.readHeader(12,1);
+	//cout << "***** Decision Tree Display *****" << endl;
+	//attributeName = reader.readHeader(12,1);
 	//DT->display(attributeName);
 
 	// Label Prediction using testSet
 	vector<int> predictLabel_DT = DT->predict(testSetDT);
 	double accuracy_DT = Evaluation::accuracy(originalLabel, predictLabel_DT);
+	cout << "***** Decision Tree Prediction Results *****" << endl;
 	cout << "Accuracy: " << accuracy_DT << endl;
 	Evaluation::confusionMatrix(originalLabel, predictLabel_DT);
 	/*for (int i = 0; i < predictLabel_DT.size(); i++) {
 		cout << predictLabel_DT[i] << "  " << predictLabel[i] << "  " << originalLabel[i] << endl;
 	}*/
 	
+	// Combined Label Prediction
 	vector<int> combinePredict = Evaluation::vote(predictLabel_DT, predictLabel);
 	double accuracy_Combine = Evaluation::accuracy(originalLabel, combinePredict);
+	cout << "***** Combined Prediction Results *****" << endl;
 	cout << "Accuracy: " << accuracy_Combine << endl;
 	Evaluation::confusionMatrix(originalLabel, combinePredict);
 

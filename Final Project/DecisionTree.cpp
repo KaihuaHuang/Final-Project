@@ -365,7 +365,9 @@ void Tree::display(vector<string> attributeName, int depth) {
 	//string attribute = attributeName[this->DecisionNode];
 	//std::cout << attribute << endl;
 	if (this->isLeaf()) { cout << this->DecisionNode << "(Leaf Node)" << endl; }
-	else { cout << this->DecisionNode << endl; }
+	else { cout << attributeName[this->DecisionNode] << endl; }
+	//else { cout << this->DecisionNode << endl; }
+
 	
 	for (int i = 0; i < this->Child.size(); ++i) {
 		(this->Child[i])->display(attributeName, depth + 1);
