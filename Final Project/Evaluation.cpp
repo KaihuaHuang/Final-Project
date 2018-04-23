@@ -32,3 +32,23 @@ void Evaluation::confusionMatrix(std::vector<int> original, std::vector<int> pre
 	cout << setw(4) << "0" << setw(4) << matrix[1][0] << setw(4) << matrix[1][1] << setw(4) << matrix[1][2] << endl;
 	cout << setw(4) << "1" << setw(4) << matrix[2][0] << setw(4) << matrix[2][1] << setw(4) << matrix[2][2] << endl;
 }
+
+std::vector<int> Evaluation::vote(std::vector<int> KNNpredict, std::vector<int> DTpredict)
+{
+	int size = KNNpredict.size();
+	std::vector<int> result;
+	for (int i = 0; i < size; i++) {
+		int combine = KNNpredict[i] + DTpredict[i];
+		if (combine > 0) {
+			result.push_back(1);
+		}
+		else if(combine == 0) {
+			result.push_back(0);
+		}
+		else {
+			result.push_back(-1);
+		}
+
+	}
+	return result;
+}

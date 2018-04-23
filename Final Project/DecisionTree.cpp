@@ -307,7 +307,9 @@ Tree* Tree::buildTree(Tree* tree, vector<Node> dataSet, int depth, vector<int> a
 	tree->setDepth(depth);
 	tree->setDecisionNode(maxAttributeIndex);
 	auto ita = find(attributes.begin(), attributes.end(), maxAttributeIndex);
-	auto it = attributes.erase(ita);
+	if(*ita != 10){
+		auto it = attributes.erase(ita);
+	}
 	vector<string> values = { "lowerValue","upperValue" };
 	string leftBranch = "< " + to_string(maxCutOff);
 	string rightBranch = "> " + to_string(maxCutOff);

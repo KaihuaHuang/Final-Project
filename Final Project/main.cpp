@@ -35,7 +35,7 @@ int main() {
 	vector<Node> balanceSet = DATARPOCESS::rebalanceSet(trainningSet, balanceWeights);
 
 
-	double weights[12] = {1,1,1,1,1,1,1,1,1,1,1,1};
+	double weights[12] = {1,1,1,1,1,1,1,1,1,1,3,1};
 
 	KNN cif;
 	cif.fit(balanceSet, balanceSet.size());
@@ -52,7 +52,6 @@ int main() {
 	int factorNum = trainningSet[0].getFactorNum();
 	vector<int> attributes;
 	for (int i = 0; i < factorNum - 1; ++i) { attributes.push_back(i); }
-
 	setPair = DATARPOCESS::seperateSet(dataSet, SPLITWEIGHT);
 	set trainningSetDT = get<0>(setPair);
 	set testSetDT = get<1>(setPair);
@@ -63,7 +62,7 @@ int main() {
 	DT = DT->buildTree(DT, balanceSetDT,0,attributes);
 	// Display the tree structure
 	//vector<string> attributeName = reader.readHeader(12,1);
-	DT->display(attributeName);
+	//DT->display(attributeName);
 
 	// Label Prediction using testSet
 	vector<int> predictLabel_DT = DT->predict(testSetDT);
@@ -73,5 +72,10 @@ int main() {
 	/*for (int i = 0; i < predictLabel_DT.size(); i++) {
 		cout << predictLabel_DT[i] << "  " << predictLabel[i] << "  " << originalLabel[i] << endl;
 	}*/
+	
+	vector<int> combinePredict = Evaluation::vote(predictLabel_DT, predictLabel);
+	double accuracy_Combine = Evaluation::accuracy(originalLabel, combinePredict);
+	cout << "Accuracy: " << accuracy_Combine << endl;
+	Evaluation::confusionMatrix(originalLabel, combinePredict);
 
  }
