@@ -6,7 +6,7 @@ using namespace std;
 
 
 
-// DataSet Processor
+// DataSet Process
 vector<double> getTargets(vector<Node> dataSet) {
 	vector<double> result3mo;
 	for (int i = 0; i < dataSet.size(); ++i) {
